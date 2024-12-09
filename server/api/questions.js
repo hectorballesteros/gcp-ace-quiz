@@ -1,10 +1,26 @@
-import connectToDatabase from '../lib/mongodb';
-import Question from '../models/Question';
+import dynamoDB from '../lib/dynamodb';
+import { ScanCommand } from '@aws-sdk/lib-dynamodb';
+
+// Función para obtener preguntas aleatorias
+function obtenerPreguntasAleatorias(items, cantidad) {
+  return items.sort(() => 0.5 - Math.random()).slice(0, cantidad);
+}
 
 export default defineEventHandler(async () => {
-  await connectToDatabase();
+  const params = {
+    TableName: 'Preguntas',
+  };
 
-  // Obtén 20 preguntas aleatorias
-  const questions = await Question.aggregate([{ $sample: { size: 5 } }]);
-  return questions;
+  try {
+    // Ejecutar comando Scan para obtener todos los elementos
+    const data = await dynamoDB.send(new ScanCommand(params));
+
+    // Seleccionar 20 preguntas aleatorias
+    const preguntasAleatorias = obtenerPreguntasAleatorias(data.Items, 20);
+
+    return preguntasAleatorias;
+  } catch (error) {
+    console.error('Error al obtener preguntas de DynamoDB:', error);
+    throw createError({ statusCode: 500, message: 'Error al obtener preguntas' });
+  }
 });
