@@ -16,7 +16,7 @@ export default defineEventHandler(async () => {
     const data = await dynamoDB.send(new ScanCommand(params));
 
     // Seleccionar 20 preguntas aleatorias
-    const preguntasAleatorias = obtenerPreguntasAleatorias(data.Items, 20);
+    const preguntasAleatorias = obtenerPreguntasAleatorias(data.Items, 50);
 
     return preguntasAleatorias;
   } catch (error) {

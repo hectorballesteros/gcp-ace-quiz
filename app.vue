@@ -27,6 +27,12 @@
           >
             20 Preguntas
           </button>
+          <button
+            @click="startTest(50)"
+            class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700"
+          >
+            50 Preguntas
+          </button>
         </div>
       </div>
 
